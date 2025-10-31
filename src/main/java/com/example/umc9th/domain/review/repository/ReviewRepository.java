@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewQueryDsl {
     List<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId);
 
     List<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);

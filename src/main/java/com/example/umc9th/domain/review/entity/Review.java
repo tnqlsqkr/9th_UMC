@@ -23,6 +23,9 @@ public class Review extends BaseEntity {
     @Column(name = "score", nullable = false, precision = 2, scale = 1)
     private BigDecimal score;
 
+    @Column(name="content", nullable = false)
+    private String content;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

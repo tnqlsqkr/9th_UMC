@@ -2,6 +2,8 @@ package com.example.umc9th.domain.review.service.query;
 
 import com.example.umc9th.domain.review.entity.QReview;
 import com.example.umc9th.domain.review.entity.Review;
+import com.example.umc9th.domain.review.exception.ReviewException;
+import com.example.umc9th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc9th.domain.review.repository.ReviewRepository;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +24,27 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(type.equals("location")){
-            builder.and(review.store.location.contains(query));
+        switch (type) {
+            case "location" -> builder.and(review.store.location.contains(query));
+            case "score" -> builder.and(review.score.goe(new BigDecimal(query)));
+            case "both" -> {
+                String[] parts = query.split("&");
+                if (parts.length != 2) {
+                    throw new ReviewException(ReviewErrorCode.INVALID_QUERY_FORMAT);
+                }
+                builder.and(review.store.location.contains(parts[0]));
+                builder.and(review.score.goe(new BigDecimal(parts[1])));
+            }
+            default -> throw new ReviewException(ReviewErrorCode.INVALID_SEARCH_TYPE);
         }
-        if(type.equals("score")){
-            builder.and(review.score.goe(new BigDecimal(query)));
-        }
-        if(type.equals("both")) {
-            String firstQuery = query.split("&")[0];
-            String secondQuery = query.split("&")[1];
 
-            builder.and(review.store.location.contains(firstQuery));
-            builder.and(review.score.goe(new BigDecimal(secondQuery)));
+        List<Review> reviews = reviewRepository.searchReview(builder);
+
+        if(reviews.isEmpty()){
+            throw new ReviewException(ReviewErrorCode.NOT_FOUND_REVIEW);
         }
 
-        return reviewRepository.searchReview(builder);
+        return reviews;
     }
 
     @Override
@@ -46,31 +54,39 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(review.member.id.eq(memberId));
 
-        if(type.equals("store")){
-            builder.and(review.store.name.contains(query));
+        switch (type) {
+            case "store" -> builder.and(review.store.name.contains(query));
+
+            case "score" -> {
+                int star = Integer.parseInt(query);
+                BigDecimal lower = new BigDecimal(star);
+                BigDecimal upper = lower.add(BigDecimal.ONE);
+                builder.and(review.score.goe(lower).and(review.score.lt(upper)));
+            }
+
+            case "both" -> {
+                String[] parts = query.split(",");
+                if (parts.length != 2) {
+                    throw new ReviewException(ReviewErrorCode.INVALID_QUERY_FORMAT);
+                }
+
+                builder.and(review.store.name.contains(parts[0]));
+
+                int star = Integer.parseInt(parts[1]);
+                BigDecimal lower = new BigDecimal(star);
+                BigDecimal upper = lower.add(BigDecimal.ONE);
+                builder.and(review.score.goe(lower).and(review.score.lt(upper)));
+            }
+
+            default -> throw new ReviewException(ReviewErrorCode.INVALID_SEARCH_TYPE);
         }
-        if(type.equals("score")){
-            int star = Integer.parseInt(query);
-            BigDecimal lower = new BigDecimal(star);
-            BigDecimal upper = lower.add(BigDecimal.ONE);
 
-            builder.and(review.score.goe(lower)
-                    .and(review.score.lt(upper)));
-        }
-        if(type.equals("both")) {
-            String firstQuery = query.split(",")[0];
-            String secondQuery = query.split(",")[1];
+        List<Review> reviews = reviewRepository.searchReview(builder);
 
-            builder.and(review.store.name.contains(firstQuery));
-
-            int star = Integer.parseInt(secondQuery);
-            BigDecimal lower = new BigDecimal(star);
-            BigDecimal upper = lower.add(BigDecimal.ONE);
-
-            builder.and(review.score.goe(lower)
-                    .and(review.score.lt(upper)));
+        if(reviews.isEmpty()){
+            throw new ReviewException(ReviewErrorCode.NOT_FOUND_REVIEW);
         }
 
-        return reviewRepository.searchReview(builder);
+        return reviews;
     }
 }

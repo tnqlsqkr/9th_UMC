@@ -18,7 +18,8 @@ public class GlobalExceptionAdvice {
         return ResponseEntity
                 .status(ex.getCode().getStatus())
                 .body(ApiResponse.onFailure(
-                        ex.getCode()
+                        ex.getCode(),
+                        null
                 ));
     }
 
@@ -27,7 +28,8 @@ public class GlobalExceptionAdvice {
         log.error("[ WARNING ] Internal Server Error : {}", ex.getMessage());
         BaseErrorCode errorCode = GeneralErrorCode.INTERNAL_SERVER_ERROR_500;
         ApiResponse<String> errorResponse = ApiResponse.onFailure(
-                errorCode
+                errorCode,
+                null
         );
         return ResponseEntity
                 .status(errorCode.getStatus())

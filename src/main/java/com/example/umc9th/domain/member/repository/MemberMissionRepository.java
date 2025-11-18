@@ -17,4 +17,6 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
     );
 
     List<MemberMission> findAllByMemberId(Long memberId);
+
+    boolean existsByMemberIdAndMissionId(Long memberId, Long missionId);
 }

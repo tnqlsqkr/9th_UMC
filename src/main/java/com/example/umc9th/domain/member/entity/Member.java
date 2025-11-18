@@ -51,6 +51,7 @@ public class Member extends BaseEntity {
 
     @Column(name = "auth_provider", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private AuthProvider auth_provider = AuthProvider.NONE;
 
     @Column(name = "deleted_at")

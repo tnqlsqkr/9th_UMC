@@ -6,8 +6,12 @@ import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
 import com.example.umc9th.global.apiPayload.exception.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -36,4 +40,14 @@ public class GlobalExceptionAdvice {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ApiResponse<Map<String, String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String,String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+
+        GeneralErrorCode code = GeneralErrorCode.VALID_FAILED;
+        ApiResponse<Map<String, String>> errorResponse = ApiResponse.onFailure(code, errors);
+
+        return ResponseEntity.status(code.getStatus()).body(errorResponse);
+    }
 }

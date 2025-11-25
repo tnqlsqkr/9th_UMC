@@ -1,6 +1,6 @@
 package com.example.umc9th.domain.mission.dto.res;
 
-import com.example.umc9th.domain.member.enums.MissionStatus;
+import com.example.umc9th.domain.mission.enums.MissionStatus;
 import lombok.Builder;
 
 import java.time.LocalDate;

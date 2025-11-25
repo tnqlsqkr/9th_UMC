@@ -1,7 +1,6 @@
 package com.example.umc9th.domain.mission.controller;
 
 import com.example.umc9th.domain.mission.dto.res.MissionResDTO;
-import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -2,7 +2,7 @@ package com.example.umc9th.domain.mission.converter;
 
 import com.example.umc9th.domain.member.entity.Member;
 import com.example.umc9th.domain.member.entity.mapping.MemberMission;
-import com.example.umc9th.domain.member.enums.MissionStatus;
+import com.example.umc9th.domain.mission.enums.MissionStatus;
 import com.example.umc9th.domain.mission.dto.res.MissionResDTO;
 import com.example.umc9th.domain.mission.entity.Mission;
 import org.springframework.data.domain.Page;

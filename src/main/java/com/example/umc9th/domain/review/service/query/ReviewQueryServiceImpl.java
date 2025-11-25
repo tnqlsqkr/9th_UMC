@@ -1,12 +1,22 @@
 package com.example.umc9th.domain.review.service.query;
 
+import com.example.umc9th.domain.member.entity.Member;
+import com.example.umc9th.domain.member.exception.MemberException;
+import com.example.umc9th.domain.member.exception.code.MemberErrorCode;
+import com.example.umc9th.domain.member.repository.MemberRepository;
+import com.example.umc9th.domain.review.converter.ReviewConverter;
+import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.domain.review.entity.QReview;
 import com.example.umc9th.domain.review.entity.Review;
 import com.example.umc9th.domain.review.exception.ReviewException;
 import com.example.umc9th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc9th.domain.review.repository.ReviewRepository;
+import com.example.umc9th.global.apiPayload.exception.page.PageErrorCode;
+import com.example.umc9th.global.apiPayload.exception.page.PageException;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,6 +27,7 @@ import java.util.List;
 public class ReviewQueryServiceImpl implements ReviewQueryService {
 
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     public List<Review> searchReview(String query, String type) {
 
@@ -88,5 +99,20 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
         }
 
         return reviews;
+    }
+
+    @Override
+    public ReviewResDTO.ReviewPreViewListDTO findReview(Long memberId, Integer page) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        if(page == null || page < 1){
+            throw new PageException(PageErrorCode.PAGE_OUT_OF_RANGE);
+        }
+
+        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+        Page<Review> result = reviewRepository.findAllByMember(member, pageRequest);
+
+        return ReviewConverter.toReviewPreviewListDTO(result);
     }
 }

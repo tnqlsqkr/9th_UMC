@@ -1,6 +1,8 @@
 package com.example.umc9th.domain.review.repository;
 
+import com.example.umc9th.domain.member.entity.Member;
 import com.example.umc9th.domain.review.entity.Review;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +14,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewQue
     List<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId);
 
     List<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
+
+    Page<Review> findAllByMember(Member member, Pageable pageable);
 }

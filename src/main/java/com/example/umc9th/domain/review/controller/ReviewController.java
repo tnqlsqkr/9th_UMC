@@ -4,6 +4,7 @@ import com.example.umc9th.domain.review.converter.ReviewConverter;
 import com.example.umc9th.domain.review.dto.req.ReviewReqDTO;
 import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.domain.review.entity.Review;
+import com.example.umc9th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc9th.domain.review.service.command.ReviewCommandService;
 import com.example.umc9th.domain.review.service.query.ReviewQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
-public class ReviewController {
+public class ReviewController implements ReviewControllerDocs{
 
     private final ReviewQueryService reviewQueryService;
     private final ReviewCommandService reviewCommandService;
@@ -48,9 +49,18 @@ public class ReviewController {
 
     @PostMapping("/store/{storeId}")
     public ApiResponse<ReviewResDTO.PostReviewDTO> postReview(
-            @RequestParam Long storeId,
+            @PathVariable Long storeId,
             @RequestBody ReviewReqDTO.PostReviewDTO dto
     ){
         return ApiResponse.onSuccess(GeneralSuccessCode.CREATED_201, reviewCommandService.postReview(storeId, dto));
+    }
+
+    @GetMapping("/member/{memberId}")
+    @Override
+    public ApiResponse<ReviewResDTO.ReviewPreViewListDTO> getReviews(
+            @PathVariable Long memberId,
+            @RequestParam(defaultValue = "1") Integer page
+    ) {
+        return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewQueryService.findReview(memberId, page));
     }
 }

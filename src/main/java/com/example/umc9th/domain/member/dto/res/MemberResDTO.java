@@ -34,4 +34,10 @@ public class MemberResDTO {
         MissionStatus status,
         Boolean isSuccess
     ){}
+
+    @Builder
+    public record LoginDTO(
+            Long memberId,
+            String accessToken
+    ){}
 }

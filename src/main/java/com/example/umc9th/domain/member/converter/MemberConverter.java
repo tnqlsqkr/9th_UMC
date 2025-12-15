@@ -26,4 +26,11 @@ public class MemberConverter {
                 .phoneNum(joinDTO.phoneNum())
                 .build();
     }
+
+    public static MemberResDTO.LoginDTO toLoginDTO(Member member, String accessToken){
+        return MemberResDTO.LoginDTO.builder()
+                .memberId(member.getId())
+                .accessToken(accessToken)
+                .build();
+    }
 }

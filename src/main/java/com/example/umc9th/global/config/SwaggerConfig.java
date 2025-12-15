@@ -22,9 +22,11 @@ public class SwaggerConfig {
 
         Components components = new Components()
                 .addSecuritySchemes(securityScheme, new SecurityScheme()
-                .name(securityScheme)
-                .type(SecurityScheme.Type.HTTP)
-                .bearerFormat("JWT"));
+                        .name(securityScheme)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                );
 
         return new OpenAPI()
                 .info(info)

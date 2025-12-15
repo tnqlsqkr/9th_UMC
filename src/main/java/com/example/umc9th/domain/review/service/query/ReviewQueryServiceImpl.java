@@ -11,8 +11,6 @@ import com.example.umc9th.domain.review.entity.Review;
 import com.example.umc9th.domain.review.exception.ReviewException;
 import com.example.umc9th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc9th.domain.review.repository.ReviewRepository;
-import com.example.umc9th.global.apiPayload.exception.page.PageErrorCode;
-import com.example.umc9th.global.apiPayload.exception.page.PageException;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -105,10 +103,6 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
     public ReviewResDTO.ReviewPreViewListDTO findReview(Long memberId, Integer page) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-
-        if(page == null || page < 1){
-            throw new PageException(PageErrorCode.PAGE_OUT_OF_RANGE);
-        }
 
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Review> result = reviewRepository.findAllByMember(member, pageRequest);

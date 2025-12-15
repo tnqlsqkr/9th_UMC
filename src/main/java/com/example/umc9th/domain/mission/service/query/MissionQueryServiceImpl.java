@@ -8,8 +8,6 @@ import com.example.umc9th.domain.store.entity.Store;
 import com.example.umc9th.domain.store.exception.StoreException;
 import com.example.umc9th.domain.store.exception.code.StoreErrorCode;
 import com.example.umc9th.domain.store.repository.StoreRepository;
-import com.example.umc9th.global.apiPayload.exception.page.PageErrorCode;
-import com.example.umc9th.global.apiPayload.exception.page.PageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,10 +24,6 @@ public class MissionQueryServiceImpl implements MissionQueryService {
     public MissionResDTO.StoreMissionListDTO findMissions(Long storeId, Integer page){
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new StoreException(StoreErrorCode.STORE_NOT_FOUND));
-
-        if(page == null || page < 1){
-            throw new PageException(PageErrorCode.PAGE_OUT_OF_RANGE);
-        }
 
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Mission> result = missionRepository.findAllByStore(store, pageRequest);

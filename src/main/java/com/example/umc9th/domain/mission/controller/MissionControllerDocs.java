@@ -4,6 +4,7 @@ import com.example.umc9th.domain.mission.dto.res.MissionResDTO;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.Min;
 
 public interface MissionControllerDocs {
 
@@ -12,5 +13,8 @@ public interface MissionControllerDocs {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "실패")
     })
-    ApiResponse<MissionResDTO.StoreMissionListDTO> getMissions(Long storeId, Integer page);
+    ApiResponse<MissionResDTO.StoreMissionListDTO> getMissions(
+            Long storeId,
+            @Min(value = 1, message = "page는 1 이상이어야 합니다.") Integer page
+    );
 }

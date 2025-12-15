@@ -6,11 +6,13 @@ import com.example.umc9th.domain.mission.service.query.MissionQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import com.example.umc9th.global.apiPayload.code.GeneralSuccessCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/missions")
+@Validated
 public class MissionController implements MissionControllerDocs {
 
     private final MissionCommandService missionCommandService;

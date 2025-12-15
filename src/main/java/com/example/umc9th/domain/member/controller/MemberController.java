@@ -8,11 +8,13 @@ import com.example.umc9th.domain.member.service.query.MemberQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
+@Validated
 public class MemberController implements MemberControllerDocs {
 
     private final MemberCommandService memberCommandService;

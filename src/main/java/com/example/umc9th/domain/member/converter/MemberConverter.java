@@ -3,6 +3,7 @@ package com.example.umc9th.domain.member.converter;
 import com.example.umc9th.domain.member.dto.req.MemberReqDTO;
 import com.example.umc9th.domain.member.dto.res.MemberResDTO;
 import com.example.umc9th.domain.member.entity.Member;
+import com.example.umc9th.global.auth.enums.Role;
 
 public class MemberConverter {
 
@@ -13,12 +14,14 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toMember(MemberReqDTO.JoinDTO joinDTO) {
+    public static Member toMember(MemberReqDTO.JoinDTO joinDTO, String password, Role role) {
         return Member.builder()
                 .name(joinDTO.name())
                 .gender(joinDTO.gender())
                 .birth(joinDTO.birth())
                 .email(joinDTO.email())
+                .password(password)
+                .role(role)
                 .address(joinDTO.address())
                 .phoneNum(joinDTO.phoneNum())
                 .build();

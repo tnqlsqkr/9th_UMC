@@ -12,7 +12,9 @@ import com.example.umc9th.domain.member.entity.mapping.MemberFood;
 import com.example.umc9th.domain.food.repository.FoodRepository;
 import com.example.umc9th.domain.member.repository.MemberFoodRepository;
 import com.example.umc9th.domain.member.repository.MemberRepository;
+import com.example.umc9th.global.auth.enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,9 +28,13 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberFoodRepository memberFoodRepository;
     private final FoodRepository foodRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public MemberResDTO.JoinDTO signUp(MemberReqDTO.JoinDTO dto) {
-        Member member = MemberConverter.toMember(dto);
+        String salt = passwordEncoder.encode(dto.password());
+
+        Member member = MemberConverter.toMember(dto, salt, Role.ROLE_USER);
 
         memberRepository.save(member);
 

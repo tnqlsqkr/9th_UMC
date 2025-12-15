@@ -35,4 +35,11 @@ public class MemberController implements MemberControllerDocs {
     ) {
         return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_OK, memberQueryService.findActiveMissions(memberId, page));
     }
+
+    @PostMapping("/login")
+    public ApiResponse<MemberResDTO.LoginDTO> login(
+            @RequestBody @Valid MemberReqDTO.LoginDTO dto
+    ){
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FOUND, memberQueryService.login(dto));
+    }
 }
